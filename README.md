@@ -10,7 +10,7 @@ Bookla is a comprehensive booking and scheduling platform that enables businesse
 
 [Installation](#installation)  
 [Operations](#operations)  
-[Credentials](#credentials)
+[Credentials](#credentials)  
 [Resources](#resources)
 
 ## Installation
