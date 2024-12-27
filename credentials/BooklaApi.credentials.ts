@@ -5,7 +5,7 @@ import {
 } from 'n8n-workflow';
 
 export class BooklaApi implements ICredentialType {
-	name = 'BooklaApi';
+	name = 'booklaApi';
 	displayName = 'Bookla API';
 	documentationUrl = 'https://docs.bookla.com';
 	properties: INodeProperties[] = [
@@ -13,15 +13,16 @@ export class BooklaApi implements ICredentialType {
 			displayName: 'API Key',
 			name: 'apiKey',
 			type: 'string',
+			typeOptions: { password: true },
 			default: '',
 		},
 	];
-	authenticate = {
+	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
 			headers: {
 				'x-api-key': '={{$credentials.apiKey}}'
 			}
 		},
-	} as IAuthenticateGeneric;
+	};
 }

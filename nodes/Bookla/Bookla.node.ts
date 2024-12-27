@@ -3,7 +3,7 @@ import { INodeType, INodeTypeDescription, NodeConnectionType } from 'n8n-workflo
 export class Bookla implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Bookla',
-		name: 'Bookla',
+		name: 'bookla',
 		icon: 'file:bookla_icon.svg',
 		group: ['transform'],
 		version: 1,
@@ -12,22 +12,39 @@ export class Bookla implements INodeType {
 		defaults: {
 			name: 'Bookla',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: ['main'] as NodeConnectionType[],
+		outputs: ['main'] as NodeConnectionType[],
 		credentials: [
 			{
-				name: 'BooklaApi',
+				name: 'booklaApi',
 				required: true,
 			},
 		],
 		requestDefaults: {
-			baseURL: 'https://us.bookla.com/api',
+			baseURL: '={{`https://${$parameter["server"]}.bookla.com/api`}}',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 			},
 		},
 		properties: [
+			{
+				displayName: 'Server',
+				name: 'server',
+				type: 'options',
+				default: 'us',
+				options: [
+					{
+						name: 'US Server',
+						value: 'us',
+					},
+					{
+						name: 'EU Server',
+						value: 'eu',
+					},
+				],
+				description: 'Select which Bookla server to connect to',
+			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -361,7 +378,6 @@ export class Bookla implements INodeType {
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -374,7 +390,6 @@ export class Bookla implements INodeType {
 				displayName: 'Color',
 				name: 'color',
 				type: 'color',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -416,7 +431,6 @@ export class Bookla implements INodeType {
 				displayName: 'Duration',
 				name: 'duration',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -430,7 +444,6 @@ export class Bookla implements INodeType {
 				displayName: 'Spots',
 				name: 'spots',
 				type: 'number',
-				required: false,
 				default: 1,
 				displayOptions: {
 					show: {
@@ -447,7 +460,6 @@ export class Bookla implements INodeType {
 				typeOptions: {
 					multipleValues: true,
 				},
-				required: false,
 				default: [],
 				displayOptions: {
 					show: {
@@ -462,7 +474,6 @@ export class Bookla implements INodeType {
 				name: 'tickets',
 				type: 'fixedCollection',
 				default: {},
-				required: false,
 				displayOptions: {
 					show: {
 						resource: ['service'],
@@ -514,7 +525,6 @@ export class Bookla implements INodeType {
 				displayName: 'From Date',
 				name: 'from',
 				type: 'dateTime',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -528,7 +538,6 @@ export class Bookla implements INodeType {
 				displayName: 'To Date',
 				name: 'to',
 				type: 'dateTime',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -545,7 +554,6 @@ export class Bookla implements INodeType {
 				typeOptions: {
 					minValue: 1,
 				},
-				required: false,
 				default: 50,
 				displayOptions: {
 					show: {
@@ -562,7 +570,6 @@ export class Bookla implements INodeType {
 				typeOptions: {
 					minValue: 0,
 				},
-				required: false,
 				default: 0,
 				displayOptions: {
 					show: {
@@ -579,7 +586,6 @@ export class Bookla implements INodeType {
 				typeOptions: {
 					multipleValues: true,
 				},
-				required: false,
 				default: [],
 				displayOptions: {
 					show: {
@@ -596,7 +602,6 @@ export class Bookla implements INodeType {
 				typeOptions: {
 					multipleValues: true,
 				},
-				required: false,
 				default: [],
 				displayOptions: {
 					show: {
@@ -610,7 +615,6 @@ export class Bookla implements INodeType {
 				displayName: 'Client ID',
 				name: 'clientId',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -624,7 +628,6 @@ export class Bookla implements INodeType {
 				displayName: 'Duration',
 				name: 'duration',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -632,13 +635,12 @@ export class Bookla implements INodeType {
 						operation: ['update'],
 					},
 				},
-				description: 'Duration in ISO8601 format (eg. PT1H)',
+				description: 'Duration in ISO8601 format (eg. PT1H).',
 			},
 			{
 				displayName: 'Price',
 				name: 'price',
 				type: 'number',
-				required: false,
 				default: undefined,
 				displayOptions: {
 					show: {
@@ -652,7 +654,6 @@ export class Bookla implements INodeType {
 				displayName: 'Resource ID',
 				name: 'resourceId',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -666,7 +667,6 @@ export class Bookla implements INodeType {
 				displayName: 'Spots',
 				name: 'spots',
 				type: 'number',
-				required: false,
 				default: undefined,
 				displayOptions: {
 					show: {
@@ -680,7 +680,6 @@ export class Bookla implements INodeType {
 				displayName: 'Start Time',
 				name: 'startTime',
 				type: 'dateTime',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -694,9 +693,13 @@ export class Bookla implements INodeType {
 				displayName: 'Status',
 				name: 'status',
 				type: 'options',
-				required: false,
 				default: '',
+				// eslint-disable-next-line n8n-nodes-base/node-param-options-type-unsorted-items
 				options: [
+					{
+						name: "Select Status",
+						value: '',
+					},
 					{
 						name: 'Confirmed',
 						value: 'confirmed',
@@ -735,7 +738,6 @@ export class Bookla implements INodeType {
 				displayName: 'Client ID',
 				name: 'clientID',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -753,7 +755,7 @@ export class Bookla implements INodeType {
 				displayName: 'Email',
 				name: 'email',
 				type: 'string',
-				required: false,
+				placeholder: 'name@email.com',
 				default: '',
 				displayOptions: {
 					show: {
@@ -771,7 +773,6 @@ export class Bookla implements INodeType {
 				displayName: 'External User ID',
 				name: 'externalUserID',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -791,9 +792,7 @@ export class Bookla implements INodeType {
 				type: 'number',
 				typeOptions: {
 					minValue: 1,
-					maxValue: 100,
 				},
-				required: false,
 				default: 50,
 				displayOptions: {
 					show: {
@@ -814,7 +813,6 @@ export class Bookla implements INodeType {
 				typeOptions: {
 					minValue: 0,
 				},
-				required: false,
 				default: 0,
 				displayOptions: {
 					show: {
